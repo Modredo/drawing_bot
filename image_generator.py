@@ -11,14 +11,14 @@ class ImageGenerator:
         self.images_collection = self.load_collection()
         self.image_data_keys = ["id", "image_url", "prompt"]
 
-    def generate_an_image(self, prompt: str, size: str = "1024x1024") -> str:
+    def generate_an_image(self, prompt: str, size: str = "512x512") -> str:
         '''accepts an image prompt and size
         available sizes: 256x256, 512x512, or 1024x1024
         '''
         response = openai.Image.create(
             prompt=prompt,
             n=1,
-            size="1024x1024"
+            size=size
         )
         return response['data'][0]['url']
 
