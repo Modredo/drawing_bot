@@ -58,7 +58,7 @@ local_css("style.css")
 
 # Create a text input for the image prompt
 prompt = st.text_input('What image would you like me to draw?')
-prompt = 'illustration of' + prompt
+prompt = 'illustration of ' + prompt
 
 # When the 'Generate' button is clicked, the image is generated and displayed
 if st.button('Generate'):
