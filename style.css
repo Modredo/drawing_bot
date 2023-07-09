@@ -1,3 +1,4 @@
 div[data-baseweb="input"] > div {
     background-color: lightgray;
-}
+    color:black;
+}   
