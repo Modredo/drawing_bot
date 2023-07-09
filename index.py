@@ -7,7 +7,6 @@ import boto3
 
 
 # read in the environment variable with the API value
-
 openai.api_key = os.getenv('OPENAIKEY')
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -42,6 +41,8 @@ def add_timestamp(filename: str) -> str:
     base, extension = os.path.splitext(filename)
     return f"{base}_{timestamp}{extension}"
 
+def add_s3_directory(file_name: str, directory_name: str = 'data_in') -> str:
+    return f'{directory_name}/'+file_name
 
 # Create an instance of the ImageGenerator class
 image_gen = ImageGenerator()
@@ -65,7 +66,7 @@ if st.button('Draw it!'):
     image_url = image_gen.generate_an_image(prompt)
     id = image_gen.generate_id()
     image_gen.save_image_to_collection(id, image_url, prompt)
-    s3_file_name=add_timestamp(image_gen.collection_file)
+    s3_file_name=add_s3_directory(add_timestamp(image_gen.collection_file))
     upload_to_s3(file_name=image_gen.collection_file, bucket=BUCKET, object_name=s3_file_name )
 
     # Display the image
