@@ -61,7 +61,7 @@ prompt = st.text_input('What image would you like me to draw?')
 prompt = 'illustration of ' + prompt
 
 # When the 'Generate' button is clicked, the image is generated and displayed
-if st.button('Generate'):
+if st.button('Draw it!'):
     image_url = image_gen.generate_an_image(prompt)
     id = image_gen.generate_id()
     image_gen.save_image_to_collection(id, image_url, prompt)
