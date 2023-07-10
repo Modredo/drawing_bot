@@ -57,7 +57,6 @@ class ImageGenerator:
 
 def main():
     # read in the environment variable with the API value
-    from dotenv import load_dotenv, find_dotenv
     _ = load_dotenv(find_dotenv('./config/.env'))
 
     openai.api_key  = os.getenv('OPENAIKEY')
