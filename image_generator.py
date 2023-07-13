@@ -8,7 +8,7 @@ from dotenv import load_dotenv, find_dotenv
 class ImageGenerator:
     def __init__(self, collection_file: str = 'images_collection.json'):
         self.collection_file = collection_file
-        self.images_collection = self.load_collection()
+        self.images_collection = []
         self.image_data_keys = ["id", "image_url", "prompt"]
 
     def generate_an_image(self, prompt: str, size: str = "512x512") -> str:
