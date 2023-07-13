@@ -44,8 +44,7 @@ def add_timestamp(filename: str) -> str:
 def add_s3_directory(file_name: str, directory_name: str = 'data_in') -> str:
     return f'{directory_name}/'+file_name
 
-# Create an instance of the ImageGenerator class
-image_gen = ImageGenerator()
+
 
 st.title("Drawing bot")
 
@@ -59,15 +58,22 @@ local_css("style.css")
 
 # Create a text input for the image prompt
 prompt = st.text_input('What image would you like me to draw?')
-prompt = 'illustration of ' + prompt
+if 'illustration' in prompt:
+    prompt
+else:
+    prompt = 'illustration of ' + prompt
 
 # When the 'Generate' button is clicked, the image is generated and displayed
 if st.button('Draw it!'):
+    # Create an instance of the ImageGenerator class
+    image_gen = ImageGenerator()
     image_url = image_gen.generate_an_image(prompt)
-    id = image_gen.generate_id()
-    image_gen.save_image_to_collection(id, image_url, prompt)
+    # Display the image
+    st.image(image_url)
+    # Save data 
+    image_gen.save_image_to_collection('1')
+    # download the image 
+
     s3_file_name=add_s3_directory(add_timestamp(image_gen.collection_file))
     upload_to_s3(file_name=image_gen.collection_file, bucket=BUCKET, object_name=s3_file_name )
 
-    # Display the image
-    st.image(image_url)
