@@ -15,7 +15,6 @@ class ImageGenerator:
         self.collection_file = collection_file
         self.images_collection = []
         self.image_data_keys = ["id", "prompt", "image_name", "image_url"]
-        print(self.image_name)
 
     def get_prompt_from_user(self) -> str:
         prompt = input('\nWhat image would you like me to create?\n')
@@ -59,13 +58,7 @@ class ImageGenerator:
             now = datetime.now()
             # Format the datetime as a string
             now_str = now.strftime('%Y%m%d%H%M%S')
-            print(f'path: {path}')
-            print(f'name_prefix: {name_prefix}')
-            print(f'now_str: {now_str}')
-            print(f'from set_image_name: ')
-            print(f'{path}{name_prefix}{now_str}.jpg')
             filename = f'{path}{name_prefix}{now_str}.jpg'
-            print(f'from set_image_name: {filename}')
             return filename
 
     def save_image_to_collection(self, id: str):
@@ -78,34 +71,14 @@ class ImageGenerator:
         self.images_collection.append(image_data)
         self.save_collection()
 
-    def download_image(self, prompt: str) -> str:
-        # Generate the image and get its URL
-        image_url = self.generate_an_image(prompt)
-
-        response = requests.get(image_url, stream=True)
-
-        # Check if the request was successful
+    def download_image(self) -> str:
+        response = requests.get(self.image_url, stream=True)
         if response.status_code == 200:
-            
             # Open the file in write and binary mode
-            with open(filename, 'wb') as f:
+            with open(self.image_name, 'wb') as f:
                 f.write(response.content)
+            return self.image_name
 
-            return image_url
-        else:
-            return image_url
-
-    def generate_and_save_data(self, prompt):
-        # Generate an ID for the new image
-        id = self.generate_id()
-
-        # # Save the image and get its name
-        # image_name = self.save_image_from_url()
-
-        # # If the image was saved successfully, save it to the collection
-        # if image_name is not None:
-        #     self.save_image_to_collection(id=id, image_url=image_name, prompt=prompt, image_name=image_name)
-# Save image 
 
 def main():
     # read in the environment variable with the API value
@@ -118,8 +91,6 @@ def main():
     image_url = image_gen.generate_an_image(prompt)
     id = image_gen.generate_id()
     image_gen.save_image_to_collection(id, image_url, prompt)
-    print(f'Image: {image_url}')
-
 
 
 if __name__ == '__main__':

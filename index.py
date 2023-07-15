@@ -42,6 +42,7 @@ def add_timestamp(filename: str) -> str:
     return f"{base}_{timestamp}{extension}"
 
 def add_s3_directory(file_name: str, directory_name: str = 'data_in') -> str:
+    file_name=file_name.split('/')[-1]
     return f'{directory_name}/'+file_name
 
 
@@ -63,6 +64,7 @@ if 'illustration' in prompt:
 else:
     prompt = 'illustration of ' + prompt
 
+
 # When the 'Generate' button is clicked, the image is generated and displayed
 if st.button('Draw it!'):
     # Create an instance of the ImageGenerator class
@@ -72,8 +74,19 @@ if st.button('Draw it!'):
     st.image(image_url)
     # Save data 
     image_gen.save_image_to_collection('1')
-    # download the image 
 
+    # download image
+    image_gen.download_image()
+
+    # upload json collection file to s3
     s3_file_name=add_s3_directory(add_timestamp(image_gen.collection_file))
     upload_to_s3(file_name=image_gen.collection_file, bucket=BUCKET, object_name=s3_file_name )
 
+    #upload image file to s3
+    s3_file_name=add_s3_directory(image_gen.image_name, 'data_in/images')
+    upload_to_s3(file_name=image_gen.image_name, bucket=BUCKET, object_name=s3_file_name )
+
+    # if image liked, save to S3
+    # TODO: add a flag to json 
+    if st.button('❤️'):
+        st.write('Thank you!')
