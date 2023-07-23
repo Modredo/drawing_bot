@@ -1,6 +1,7 @@
 import os
 import openai
 import datetime
+import time
 import streamlit as st
 from image_generator import ImageGenerator
 import boto3
@@ -65,15 +66,18 @@ else:
 
 # When the 'Generate' button is clicked, the image is generated and displayed
 if st.button('Draw it!'):
-    # Create an instance of the ImageGenerator class
-    image_gen = ImageGenerator()
-    image_url = image_gen.generate_an_image(prompt)
-    # Display the image
-    st.image(image_url)
-    # Save data 
-    image_gen.save_image_to_collection('1')
-    # download the image 
+    with st.spinner('drawing.. please wait'):
+        time.sleep(8)
+        # Create an instance of the ImageGenerator class
+        image_gen = ImageGenerator()
+        image_url = image_gen.generate_an_image(prompt)
 
-    s3_file_name=add_s3_directory(add_timestamp(image_gen.collection_file))
-    upload_to_s3(file_name=image_gen.collection_file, bucket=BUCKET, object_name=s3_file_name )
+        # Display the image
+        st.image(image_url)
+        # Save data 
+        image_gen.save_image_to_collection('1')
+        # download the image 
+
+        s3_file_name=add_s3_directory(add_timestamp(image_gen.collection_file))
+        upload_to_s3(file_name=image_gen.collection_file, bucket=BUCKET, object_name=s3_file_name )
 
