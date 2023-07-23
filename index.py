@@ -84,8 +84,8 @@ if st.button('Draw it!'):
         upload_to_s3(file_name=image_gen.collection_file, bucket=BUCKET, object_name=s3_file_name )
 
     #upload image file to s3
-    s3_file_name=add_s3_directory(image_gen.image_name, 'data_in/images')
-    upload_to_s3(file_name=image_gen.image_name, bucket=BUCKET, object_name=s3_file_name )
+    #s3_file_name=add_s3_directory(image_gen.image_name, 'data_in/images')
+    #upload_to_s3(file_name=image_gen.image_name, bucket=BUCKET, object_name=s3_file_name )
 
     # if image liked, save to S3
     # TODO: add a flag to json 
