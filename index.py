@@ -51,8 +51,10 @@ def add_s3_directory(file_name: str, directory_name: str = 'data_in') -> str:
 
 
 # load the logo in
-image_path = 'logo.png'
-image = Image.open(image_path)
+logo = 'logo.png'
+image_logo = Image.open(logo)
+pencil ='pencil.png'
+image_pencil = Image.open(logo)
 
 # Use columns to place the title and image side by side
 col1, col2 = st.columns([2, 1])  
@@ -60,10 +62,17 @@ col1, col2 = st.columns([2, 1])
 # In the first column, put the title
 with col1:
     st.title('Drawing Bot')
-
+    # Create a text input for the image prompt
+    st.subheader('What would you like?')
+    prompt = st.text_input(label='draw this:',label_visibility="collapsed")
+    if 'illustration' in prompt:
+        prompt
+    else:
+        prompt = 'illustration of ' + prompt
+    
 # In the second column, put the image
 with col2:
-    st.image(image, use_column_width=True)
+    st.image(image_logo, use_column_width=True)
 
 # Define a function to inject custom CSS
 def local_css(file_name):
@@ -73,12 +82,6 @@ def local_css(file_name):
 # Inject the CSS
 local_css("style.css")
 
-# Create a text input for the image prompt
-prompt = st.text_input('What image would you like me to draw?')
-if 'illustration' in prompt:
-    prompt
-else:
-    prompt = 'illustration of ' + prompt
 
 
 # When the 'Generate' button is clicked, the image is generated and displayed
@@ -104,5 +107,4 @@ if st.button('✏️  Draw it!'):
 
     # if image liked, save to S3
     # TODO: add a flag to json 
-    if st.button('❤️'):
-        st.write('Thank you!')
+
