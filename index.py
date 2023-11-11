@@ -1,17 +1,20 @@
 import os
-import openai
+from openai import OpenAI
 import datetime
 import time
 import streamlit as st
 from image_generator import ImageGenerator
 import boto3
-
+from PIL import Image
 
 # read in the environment variable with the API value
-openai.api_key = os.getenv('OPENAIKEY')
+#openai.api_key = os.getenv('OPENAIKEY')
+client = OpenAI(api_key = os.environ['OPENAIKEY'])
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 BUCKET=os.getenv('S3_BUCKET')
+
+
 
 
 def upload_to_s3(file_name, bucket, object_name=None):
@@ -47,8 +50,20 @@ def add_s3_directory(file_name: str, directory_name: str = 'data_in') -> str:
     return f'{directory_name}/'+file_name
 
 
+# load the logo in
+image_path = 'logo.png'
+image = Image.open(image_path)
 
-st.title("Drawing bot")
+# Use columns to place the title and image side by side
+col1, col2 = st.columns([2, 1])  
+
+# In the first column, put the title
+with col1:
+    st.title('Drawing Bot')
+
+# In the second column, put the image
+with col2:
+    st.image(image, use_column_width=True)
 
 # Define a function to inject custom CSS
 def local_css(file_name):
@@ -67,12 +82,12 @@ else:
 
 
 # When the 'Generate' button is clicked, the image is generated and displayed
-if st.button('Draw it!'):
+if st.button('✏️  Draw it!'):
     with st.spinner('drawing.. please wait'):
         time.sleep(8)
         # Create an instance of the ImageGenerator class
         image_gen = ImageGenerator()
-        image_url = image_gen.generate_an_image(prompt)
+        image_url = image_gen.generate_an_image_d3(client=client,prompt=prompt)
 
         # Display the image
         st.image(image_url)

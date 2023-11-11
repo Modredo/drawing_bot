@@ -4,7 +4,7 @@ import requests
 from typing import Dict, List
 from datetime import datetime
 
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv, find_dotenv
 
 class ImageGenerator:
@@ -20,6 +20,12 @@ class ImageGenerator:
         prompt = input('\nWhat image would you like me to create?\n')
         prompt = 'illustration of ' + prompt
         return prompt
+
+    def get_prompt_from_user_d3(self) -> str:
+        prompt = input('\nWhat image would you like me to create?\n')
+        prompt = 'photorealistic' + prompt
+        return prompt
+
 
     def save_collection(self):
         with open(self.collection_file, 'w') as f:
@@ -40,18 +46,41 @@ class ImageGenerator:
         else:
             return '1'
 
-    def generate_an_image(self, prompt: str, size: str = "512x512") -> str:
-        '''accepts an image prompt and size
-        available sizes: 256x256, 512x512, or 1024x1024
+    # def generate_an_image(self, prompt: str, size: str = "512x512") -> str:
+    #     '''
+    #     Dall-e 2 function
+    #     accepts an image prompt and size
+    #     available sizes: 256x256, 512x512, or 1024x1024
+    #     '''
+    #     self.prompt=prompt
+    #     response = openai.Image.create(
+    #         prompt=prompt,
+    #         n=1,
+    #         size=size
+    #     )
+    #     self.image_url = response['data'][0]['url']
+    #     return self.image_url
+    
+
+    def generate_an_image_d3(self, client, prompt: str, size: str = "1024x1024") -> str:
+        '''
+        Dall-e 3 function
+        accepts an image prompt and size
+        available sizes: 
+        Dall-e 3 1024x1024, 1024,1792, 1792x1024
         '''
         self.prompt=prompt
-        response = openai.Image.create(
+
+        response = client.images.generate(
+            model='dall-e-3',
             prompt=prompt,
             n=1,
-            size=size
+            size=size,
+            quality='standard',
         )
-        self.image_url = response['data'][0]['url']
+        self.image_url = response.data[0].url
         return self.image_url
+
 
     def set_image_name(self, path: str ='./data/gallery/', name_prefix: str = 'dalee_') -> str:
             # Get the current datetime
@@ -84,13 +113,13 @@ def main():
     # read in the environment variable with the API value
     _ = load_dotenv(find_dotenv('./config/.env'))
 
-    openai.api_key  = os.getenv('OPENAIKEY')
+    client = OpenAI(api_key = os.environ['OPENAIKEY'])
 
     image_gen = ImageGenerator()
-    prompt = image_gen.get_prompt_from_user()
-    image_url = image_gen.generate_an_image(prompt)
+    prompt = image_gen.get_prompt_from_user_d3()
+    image_url = image_gen.generate_an_image_d3(client=client,prompt=prompt)
     id = image_gen.generate_id()
-    image_gen.save_image_to_collection(id, image_url, prompt)
+    image_gen.save_image_to_collection(id)
 
 
 if __name__ == '__main__':
