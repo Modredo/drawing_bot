@@ -63,7 +63,7 @@ col1, col2 = st.columns([2, 1])
 with col1:
     st.title('Drawing Bot')
     # Create a text input for the image prompt
-    st.subheader('What would you like?')
+    st.subheader('What should I draw?')
     prompt = st.text_input(label='draw this:',label_visibility="collapsed")
     if 'illustration' in prompt:
         prompt
